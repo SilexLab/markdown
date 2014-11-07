@@ -107,7 +107,6 @@ You may optionally set one of the following options on the parser object:
 
 For all Markdown Flavors:
 
-- `$parser->html5 = true` to enable HTML5 output instead of HTML4.
 - `$parser->keepListStartNumber = true` to enable keeping the numbers of ordered lists as specified in the markdown.
   The default behavior is to always start from 1 and increment by one regardless of the number in markdown.
 

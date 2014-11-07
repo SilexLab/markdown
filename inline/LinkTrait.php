@@ -5,8 +5,6 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown\inline;
-
 // work around https://github.com/facebook/hhvm/issues/1120
 defined('ENT_HTML401') || define('ENT_HTML401', 0);
 
@@ -225,7 +223,7 @@ REGEXP;
 		return '<img src="' . htmlspecialchars($block['url'], ENT_COMPAT | ENT_HTML401, 'UTF-8') . '"'
 			. ' alt="' . htmlspecialchars($block['text'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"'
 			. (empty($block['title']) ? '' : ' title="' . htmlspecialchars($block['title'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE, 'UTF-8') . '"')
-			. ($this->html5 ? '>' : ' />');
+			. '>';
 	}
 
 	// references

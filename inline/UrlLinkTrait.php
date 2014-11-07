@@ -5,8 +5,6 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown\inline;
-
 // work around https://github.com/facebook/hhvm/issues/1120
 defined('ENT_HTML401') || define('ENT_HTML401', 0);
 

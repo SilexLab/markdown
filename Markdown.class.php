@@ -5,43 +5,38 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown;
-
 /**
  * Markdown parser for the [initial markdown spec](http://daringfireball.net/projects/markdown/syntax).
  *
  * @author Carsten Brandt <mail@cebe.cc>
  */
-class Markdown extends Parser
-{
+class Markdown extends Parser {
 	// include block element parsing using traits
-	use block\CodeTrait;
-	use block\HeadlineTrait;
-	use block\HtmlTrait {
+	use CodeTrait;
+	use HeadlineTrait;
+	use HtmlTrait {
 		parseInlineHtml as private;
 	}
-	use block\ListTrait {
+	use ListTrait {
 		// Check Ul List before headline
 		identifyUl as protected identifyBUl;
 		consumeUl as protected consumeBUl;
 	}
-	use block\QuoteTrait;
-	use block\RuleTrait {
+	use QuoteTrait;
+	use RuleTrait {
 		// Check Hr before checking lists
 		identifyHr as protected identifyAHr;
 		consumeHr as protected consumeAHr;
 	}
+	use TableTrait;
+	use FencedCodeTrait;
 
 	// include inline element parsing using traits
-	use inline\CodeTrait;
-	use inline\EmphStrongTrait;
-	use inline\LinkTrait;
-
-	/**
-	 * @var boolean whether to format markup according to HTML5 spec.
-	 * Defaults to `false` which means that markup is formatted as HTML4.
-	 */
-	public $html5 = false;
+	use CodeTrait;
+	use EmphStrongTrait;
+	use LinkTrait;
+	use StrikeoutTrait;
+	use UrlLinkTrait;
 
 	/**
 	 * @var array these are "escapeable" characters. When using one of these prefixed with a
@@ -62,14 +57,15 @@ class Markdown extends Parser
 		'.', // dot
 		'!', // exclamation mark
 		'<', '>',
+		':', // colon
+		'|', // pipe
 	];
 
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function prepare()
-	{
+	protected function prepare() {
 		// reset references
 		$this->references = [];
 	}
@@ -77,21 +73,28 @@ class Markdown extends Parser
 	/**
 	 * Consume lines for a paragraph
 	 *
-	 * Allow headlines and code to break paragraphs
+	 * Allow headlines, lists and code to break paragraphs
 	 */
-	protected function consumeParagraph($lines, $current)
-	{
+	protected function consumeParagraph($lines, $current) {
 		// consume until newline
 		$content = [];
 		for ($i = $current, $count = count($lines); $i < $count; $i++) {
 			$line = $lines[$i];
-			if (!empty($line) && ltrim($line) !== '' &&
-				!($line[0] === "\t" || $line[0] === " " && strncmp($line, '    ', 4) === 0) &&
-				!$this->identifyHeadline($line, $lines, $i))
+			if (empty($line)
+				|| ltrim($line) === ''
+				|| !ctype_alpha($line[0]) && (
+					$this->identifyQuote($line, $lines, $i) ||
+					$this->identifyCode($line, $lines, $i) ||
+					$this->identifyFencedCode($line, $lines, $i) ||
+					$this->identifyUl($line, $lines, $i) ||
+					$this->identifyOl($line, $lines, $i) ||
+					$this->identifyHr($line, $lines, $i)
+				)
+				|| $this->identifyHeadline($line, $lines, $i))
 			{
-				$content[] = $line;
-			} else {
 				break;
+			} else {
+				$content[] = $line;
 			}
 		}
 		$block = [
@@ -107,8 +110,8 @@ class Markdown extends Parser
 	 *
 	 * Parses a newline indicated by two spaces on the end of a markdown line.
 	 */
-	protected function renderText($text)
-	{
-		return str_replace("  \n", $this->html5 ? "<br>\n" : "<br />\n", $text[1]);
+	protected function renderText($text) {
+		$br = "<br>\n";
+		return strtr($text[1], ["  \n" => $br, "\n" => $br]);
 	}
 }

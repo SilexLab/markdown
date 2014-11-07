@@ -5,8 +5,6 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown\block;
-
 /**
  * Adds horizontal rules
  */
@@ -34,7 +32,7 @@ trait RuleTrait
 	 */
 	protected function renderHr($block)
 	{
-		return $this->html5 ? "<hr>\n" : "<hr />\n";
+		return "<hr>\n";
 	}
 
 } 

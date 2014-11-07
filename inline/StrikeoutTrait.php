@@ -5,8 +5,6 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown\inline;
-
 /**
  * Adds strikeout inline elements
  */

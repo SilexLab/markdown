@@ -5,8 +5,6 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown\block;
-
 /**
  * Adds the 4 space indented code blocks
  */

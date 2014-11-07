@@ -5,7 +5,21 @@
  * @link https://github.com/cebe/markdown#readme
  */
 
-namespace cebe\markdown;
+// include traits
+require_once 'block/CodeTrait.php';
+require_once 'block/FencedCodeTrait.php';
+require_once 'block/HeadlineTrait.php';
+require_once 'block/HtmlTrait.php';
+require_once 'block/ListTrait.php';
+require_once 'block/QuoteTrait.php';
+require_once 'block/RuleTrait.php';
+require_once 'block/TableTrait.php';
+require_once 'inline/CodeTrait.php';
+require_once 'inline/EmphStrongTrait.php';
+require_once 'inline/LinkTrait.php';
+require_once 'inline/StrikeoutTrait.php';
+require_once 'inline/UrlLinkTrait.php';
+
 use ReflectionMethod;
 
 /**
